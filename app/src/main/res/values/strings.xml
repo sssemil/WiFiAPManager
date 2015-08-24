@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2015 Emil Suleymanov <suleymanovemil8@gmail.com>
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<resources xmlns:xliff="http://schemas.android.com/apk/res-auto">
+    <string name="app_name">WiFi AP Manager</string>
+    <string name="settings">Settings</string>
+
+    <!-- Used to open the ssid and security dialog for Wifi Access Point -->
+    <string name="wifi_tether_configure_ap_text">Set up Wi\u2011Fi hotspot</string>
+
+    <!-- Wifi AP: connected devices -->
+    <string name="wifi_ap_clients_title">Connected devices</string>
+    <string name="wifi_ap_client_ap_disabled">Hotspot is disabled</string>
+    <string name="wifi_ap_client_none_connected">No devices connected</string>
+
+    <string name="wifi_cancel">Cancel</string>
+    <string name="wifi_save">Save</string>
+    <string name="wifi_error">Error</string>
+    <!-- Label for the SSID of the network -->
+    <string name="wifi_ssid">Network name</string>
+    <!-- Hint for a text field to enter the SSID of a hidden wifi network. [CHAR LIMIT=35] -->
+    <string name="wifi_ssid_hint">Enter the SSID</string>
+    <!-- Label for the security of the connection -->
+    <string name="wifi_security">Security</string>
+    <!-- Label for the password of the secured network -->
+    <string name="wifi_password">Password</string>
+    <!-- Label for the check box to show password -->
+    <string name="wifi_show_password">Show password</string>
+
+    <string name="credentials_password_too_short">The password must have at least 8 characters.</string>
+
+    <!-- Subtext on configuration preference to indicate SSID and security chosen -->
+    <string name="wifi_tether_configure_subtext"><xliff:g id="network_ssid">%1$s</xliff:g> <xliff:g id="network_security">%2$s</xliff:g> portable Wi\u2011Fi hotspot</string>
+    <!-- Summary text when turning hotspot on -->
+    <string name="wifi_tether_starting">Turning hotspot on\u2026</string>
+    <!-- Summary text when turning hotspot off -->
+    <string name="wifi_tether_stopping">Turning off hotspot\u2026</string>
+    <!-- Label for Wifi tether checkbox. Toggles Access Point on/off -->
+    <string name="wifi_tether_checkbox_text">Portable Wi\u2011Fi hotspot</string>
+
+    <!--Bluetooth settings screen, text that appears in heading bar when scanning for devices -->
+    <string name="progress_scanning">Searching</string><!-- Used in Wi-Fi settings dialogs when Wi-Fi does not have any security. -->
+
+    <string name="wifi_security_none">None</string>
+    <!-- Do not translate.  Terminology for wifi with WEP security -->
+    <string name="wifi_security_wep">WEP</string>
+    <!-- Do not translate.  Terminology for wifi with WPA security -->
+    <string name="wifi_security_wpa">WPA PSK</string>
+    <!-- Do not translate.  Terminology for wifi with WPA2 security -->
+    <string name="wifi_security_wpa2">WPA2 PSK</string>
+    <!-- Do not translate.  Terminology for wifi with both WPA/WPA2 security, or unknown -->
+    <string name="wifi_security_wpa_wpa2">WPA/WPA2 PSK</string>
+    <!-- Do not translate.  Terminology for wifi with unknown PSK type -->
+    <string name="wifi_security_psk_generic">@string/wifi_security_wpa_wpa2</string>
+    <!-- Do not translate.  Concise terminology for wifi with 802.1x EAP security -->
+    <string name="wifi_security_eap">802.1x EAP</string>
+    <!-- Do not translate. Default access point SSID used for tethering -->
+    <string name="wifi_tether_configure_ssid_default" translatable="false">AndroidAP</string>
+    <string name="show_notification">Show notification</string>
+    <string name="title_activity_about">AboutActivity</string>
+
+    <string name="ver">Version</string>
+    <string name="small_info">WiFi Access Point Manager</string>
+
+    <string name="license1">Copyright © 2015 Emil Suleymanov</string>
+    <string name="license2">Distributed under the Apache License v2.0</string>
+    <string name="license3">Source code is available at https://github.com/sssemil/WiFiAPManager</string>
+    <string name="about">About</string>
+    <string name="build_version">Build version</string>
+
+    <!-- Shown when the device is tethered -->
+    <string name="tethered_notification_title">Tethering or hotspot active</string>
+    <string name="tethered_notification_no_device_message">No connected device</string>
+    <string name="tethered_notification_one_device_message"><xliff:g id="count">%1$s</xliff:g> connected device</string>
+    <string name="tethered_notification_multi_device_message"><xliff:g id="count">%1$s</xliff:g> connected devices</string>
+    <string name="blocked_devices">Blocked devices</string>
+    <string name="title_activity_blocked">BlockedActivity</string>
+
+    <string name="save">Save</string>
+    <string name="clear">Clear</string>
+    <string name="warning">Warning</string>
+    <string name="no_root">Looks like you don`t have root permissions.</string>
+    <string name="bad_perm">Looks like file permissions need to be fixed. Fix them?</string>
+    <string name="error">Error</string>
+    <string name="block_dev">Block this MAC address?</string>
+    <string name="no_blocked_devs">No blocked devices</string>
+    <string name="touch_to_remove">Touch to remove</string>
+    <string name="show_notification_summary">Display number of connected devices</string>
+
+</resources>
