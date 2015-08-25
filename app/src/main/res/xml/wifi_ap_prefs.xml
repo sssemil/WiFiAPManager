@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
      Copyright (C) 2015 The CyanogenMod Project
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -15,13 +14,13 @@
 
     <SwitchPreference
         android:key="enable_wifi_ap"
-        android:title="@string/wifi_tether_checkbox_text"
-        android:persistent="false" />
+        android:persistent="false"
+        android:title="@string/wifi_tether_checkbox_text" />
 
     <Preference
         android:key="wifi_ap_ssid_and_security"
-        android:title="@string/wifi_tether_configure_ap_text"
-        android:persistent="false" />
+        android:persistent="false"
+        android:title="@string/wifi_tether_configure_ap_text" />
 
     <sssemil.com.wifiapmanager.Utils.WifiApClientsProgressCategory
         android:key="connected_clients"

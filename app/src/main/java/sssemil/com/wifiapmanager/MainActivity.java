@@ -31,7 +31,6 @@ import android.os.Message;
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
 import android.preference.SwitchPreference;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -228,8 +227,7 @@ public class MainActivity extends AppCompatPreferenceActivity implements
             showDialog(DIALOG_AP_SETTINGS);
         } else {
             final String mac = String.valueOf(preference.getTitle());
-            Log.i("PREF", mac);
-            if(mac.matches("..:..:..:..:..:..")) {
+            if (mac.matches("..:..:..:..:..:..")) {
                 final AlertDialog.Builder adb = new AlertDialog.Builder(MainActivity.this);
                 adb.setTitle(getString(R.string.warning));
                 adb.setMessage(getString(R.string.block_dev));

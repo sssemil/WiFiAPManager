@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2015 Emil Suleymanov <suleymanovemil8@gmail.com>
+<?xml version="1.0" encoding="utf-8"?><!--
+ Copyright (C) 2015 Emil Suleymanov <suleymanovemil8@gmail.com>
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
      You may obtain a copy of the License at
@@ -12,9 +12,8 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="sssemil.com.wifiapmanager" >
+    package="sssemil.com.wifiapmanager">
 
     <uses-feature
         android:name="android.hardware.wifi"
@@ -22,21 +21,24 @@
 
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_SUPERUSER" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="ANDROID.PERMISSION.CHANGE_WIFI_MULTICAST_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_SUPERUSER" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.MODIFY_PHONE_STATE" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Theme.AppCompat" >
+        android:theme="@style/Theme.AppCompat">
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -48,10 +50,9 @@
             android:label="@string/settings" />
         <activity
             android:name=".AboutActivity"
-            android:label="@string/title_activity_about" >
-        </activity>
+            android:label="@string/title_activity_about" />
 
-        <receiver android:name=".OnBoot" >
+        <receiver android:name=".OnBoot">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="sssemil.com.wifiapmanager.action.STARTED" />
@@ -61,13 +62,14 @@
         <service
             android:name=".MainService"
             android:enabled="true"
-            android:exported="true" >
-        </service>
+            android:exported="true" />
 
         <activity
             android:name=".BlockedActivity"
-            android:label="@string/title_activity_blocked" >
-        </activity>
+            android:label="@string/blocked_devices" />
+        <activity
+            android:name=".LicenseActivity"
+            android:label="@string/open_source_license"></activity>
     </application>
 
 </manifest>

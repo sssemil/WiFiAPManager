@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2015 Emil Suleymanov <suleymanovemil8@gmail.com>
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2015 Emil Suleymanov <suleymanovemil8@gmail.com>
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
      You may obtain a copy of the License at
@@ -19,8 +18,13 @@
         <SwitchPreference
             android:defaultValue="false"
             android:key="show_notification"
-            android:title="@string/show_notification"
-            android:summary="@string/show_notification_summary"/>
+            android:summary="@string/show_notification_summary"
+            android:title="@string/show_notification" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="auto_enable_mobile_net"
+            android:summary="Turn on mobile network on access point start"
+            android:title="Enable mobile network" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Other">
@@ -28,6 +32,10 @@
             android:key="buildPref"
             android:summary="-.-.-"
             android:title="@string/build_version" />
+
+        <Preference
+            android:key="open_sourcePref"
+            android:title="@string/open_source_license" />
 
         <Preference
             android:key="aboutPref"

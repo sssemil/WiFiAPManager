@@ -17,12 +17,9 @@
 package sssemil.com.wifiapmanager;
 
 import android.content.Context;
-import android.net.wifi.WifiConfiguration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,8 +28,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,6 +38,16 @@ import sssemil.com.wifiapmanager.Utils.WifiApManager;
 public class BlockedActivity extends AppCompatActivity {
 
     private ArrayList<String> mBlockedList;
+
+    public static void restartAP(Context context) {
+        final WifiApManager wifiApManager = new WifiApManager(context);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                wifiApManager.restartWifiAp();
+            }
+        }).start();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +66,7 @@ public class BlockedActivity extends AppCompatActivity {
             final Adapter adapter = new Adapter(this, mBlockedList);
 
             listView.setAdapter(adapter);
-            if(listView.getCount() == 0) {
+            if (listView.getCount() == 0) {
                 nothing.setVisibility(View.VISIBLE);
             } else {
                 nothing.setVisibility(View.GONE);
@@ -85,7 +90,7 @@ public class BlockedActivity extends AppCompatActivity {
                     }).start();
                     adapter.notifyDataSetChanged();
                     view.setAlpha(1);
-                    if(listView.getCount() == 0) {
+                    if (listView.getCount() == 0) {
                         nothing.setVisibility(View.VISIBLE);
                     } else {
                         nothing.setVisibility(View.INVISIBLE);
@@ -106,16 +111,6 @@ public class BlockedActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    public static void restartAP(Context context){
-        final WifiApManager wifiApManager  = new WifiApManager(context);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                wifiApManager.restartWifiAp();
-            }
-        }).start();
     }
 
     private class Adapter extends ArrayAdapter<String> {

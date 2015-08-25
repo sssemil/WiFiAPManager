@@ -65,12 +65,14 @@ public class Settings extends AppCompatPreferenceActivity {
         String key = preference.getKey();
         if (key != null) {
             switch (key) {
-                case "aboutPref": {
-                    Intent intent = new Intent(this,
-                            AboutActivity.class);
-                    startActivity(intent);
+                case "aboutPref":
+                    startActivity(new Intent(this,
+                            AboutActivity.class));
                     break;
-                }
+                case "open_sourcePref":
+                    startActivity(new Intent(this,
+                            LicenseActivity.class));
+                    break;
             }
         }
         return true;

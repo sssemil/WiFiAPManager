@@ -20,6 +20,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.wifi.WifiManager;
 import android.preference.SwitchPreference;
 import android.provider.Settings;
@@ -104,6 +105,16 @@ public class WifiApEnabler {
             mContext.getSharedPreferences(PREFS_FILE,
                     Context.MODE_PRIVATE).edit().putInt("wifi_saved_state", 1).apply();
         }
+
+        SharedPreferences sharedPreferences
+                = mContext.getSharedPreferences(PREFS_FILE, Context.MODE_PRIVATE);
+        if (enable && sharedPreferences.getBoolean("auto_enable_mobile_net", false)) {
+            sharedPreferences.edit().putBoolean("was_mobile_net_enabled", MobileDataUtils.isMobileDataEnabled(mContext)).apply();
+            MobileDataUtils.setMobileDataEnabled(mContext, true);
+        } else if (!enable && sharedPreferences.getBoolean("auto_enable_mobile_net", false)) {
+            MobileDataUtils.setMobileDataEnabled(mContext, sharedPreferences.getBoolean("was_mobile_net_enabled", false));
+        }
+
         /**
          * Check if we have to wait for the WIFI_STATE_CHANGED intent
          * before we re-enable the Checkbox.

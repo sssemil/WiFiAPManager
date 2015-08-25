@@ -16,7 +16,6 @@
 
 package sssemil.com.wifiapmanager;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -25,7 +24,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -33,6 +31,7 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
+import android.support.v4.app.NotificationCompat;
 
 import java.util.ArrayList;
 
@@ -41,7 +40,6 @@ import sssemil.com.wifiapmanager.Utils.WifiApManager;
 
 public class MainService extends Service implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private DoScan mDoScan;
     private Context mContext;
     private Looper mLooper;
 
@@ -49,10 +47,11 @@ public class MainService extends Service implements SharedPreferences.OnSharedPr
     private HandlerThread mScanThread;
     private Handler mScanHandler;
 
-    private Notification mTetheredNotification;
+    private int mIcon;
+
+    private NotificationCompat.Builder mTetheredNotificationBuilder;
 
     private NotificationManager mNotificationManager;
-    private IntentFilter mIntentFilter;
     private SharedPreferences mSharedPreferences;
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -79,12 +78,14 @@ public class MainService extends Service implements SharedPreferences.OnSharedPr
 
         mContext = this;
 
-        mIntentFilter = new IntentFilter("android.net.wifi.WIFI_AP_STATE_CHANGED");
-        mIntentFilter.addAction("android.net.conn.TETHER_STATE_CHANGED");
-        mIntentFilter.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED);
-        mIntentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
+        IntentFilter intentFilter = new IntentFilter("android.net.wifi.WIFI_AP_STATE_CHANGED");
+        intentFilter.addAction("android.net.conn.TETHER_STATE_CHANGED");
+        intentFilter.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED);
+        intentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
 
-        mContext.registerReceiver(mReceiver, mIntentFilter);
+        mIcon = R.mipmap.ic_launcher;
+
+        mContext.registerReceiver(mReceiver, intentFilter);
 
         mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -108,7 +109,7 @@ public class MainService extends Service implements SharedPreferences.OnSharedPr
 
         if (wifiApManager.isWifiApEnabled()
                 && mSharedPreferences.getBoolean("show_notification", false)) {
-            showTetheredNotification(R.mipmap.ic_launcher);
+            showTetheredNotification();
             if (!mScanThread.isAlive()) {
                 mScanThread = new HandlerThread("WifiClientScanner");
                 mScanThread.start();
@@ -123,18 +124,9 @@ public class MainService extends Service implements SharedPreferences.OnSharedPr
         }
     }
 
-    private void showTetheredNotification(int icon) {
-        mNotificationManager =
-                (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+    private void showTetheredNotification() {
         if (mNotificationManager == null) {
             return;
-        }
-
-        if (mTetheredNotification != null) {
-            if (mTetheredNotification.icon == icon) {
-                return;
-            }
-            mNotificationManager.cancel(null, mTetheredNotification.icon);
         }
 
         Intent intent = new Intent();
@@ -142,33 +134,32 @@ public class MainService extends Service implements SharedPreferences.OnSharedPr
                 "sssemil.com.wifiapmanager.MainActivity");
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
-        PendingIntent pi = PendingIntent.getActivity(mContext, 0, intent, 0,
-                null);
+        PendingIntent pi = PendingIntent.getActivity(mContext, 0, intent, 0, null);
 
         CharSequence title = getText(R.string.tethered_notification_title);
         CharSequence message = getText(R.string.tethered_notification_no_device_message);
 
-        if (mTetheredNotification == null) {
-            mTetheredNotification = new Notification();
-            mTetheredNotification.when = 0;
+        if (mTetheredNotificationBuilder == null) {
+            mTetheredNotificationBuilder = new NotificationCompat.Builder(this)
+                    .setSmallIcon(mIcon);
         }
 
-        mTetheredNotification.icon = icon;
-        mTetheredNotification.defaults &= ~Notification.DEFAULT_SOUND;
-        mTetheredNotification.flags = Notification.FLAG_ONGOING_EVENT;
-        mTetheredNotification.tickerText = title;
-        mTetheredNotification.setLatestEventInfo(mContext, title, message, pi);
+        mTetheredNotificationBuilder
+                .setSmallIcon(mIcon)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setOngoing(true)
+                .setContentIntent(pi);
 
-        mNotificationManager.notify(null, mTetheredNotification.icon,
-                mTetheredNotification);
+        mNotificationManager.notify(mIcon, mTetheredNotificationBuilder.build());
     }
 
     private void clearTetheredNotification() {
         mNotificationManager =
                 (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-        if (mNotificationManager != null && mTetheredNotification != null) {
-            mNotificationManager.cancel(null, mTetheredNotification.icon);
-            mTetheredNotification = null;
+        if (mNotificationManager != null && mTetheredNotificationBuilder != null) {
+            mNotificationManager.cancel(null, mIcon);
+            mTetheredNotificationBuilder = null;
         }
     }
 
@@ -185,8 +176,7 @@ public class MainService extends Service implements SharedPreferences.OnSharedPr
 
         @Override
         public void handleMessage(Message msg) {
-            mDoScan = new DoScan();
-            mDoScan.execute();
+            (new DoScan()).execute();
             sendEmptyMessageDelayed(0, 2000);
         }
     }
@@ -210,7 +200,7 @@ public class MainService extends Service implements SharedPreferences.OnSharedPr
                 public void run() {
                     if ((mLastWifiClientCount != mCurrentClientCount
                             || mLastWifiClientCount == -1)
-                            && mTetheredNotification != null) {
+                            && mTetheredNotificationBuilder != null) {
                         mLastWifiClientCount = mCurrentClientCount;
                         Intent intent = new Intent();
                         intent.setClassName("sssemil.com.wifiapmanager",
@@ -220,26 +210,27 @@ public class MainService extends Service implements SharedPreferences.OnSharedPr
                         PendingIntent pi = PendingIntent.getActivity(mContext, 0, intent, 0,
                                 null);
 
-                        Resources r = mContext.getResources();
-
-                        CharSequence title =
-                                r.getText(R.string.tethered_notification_title);
+                        CharSequence title = getText(R.string.tethered_notification_title);
                         CharSequence message;
                         if (mCurrentClientCount == 0) {
-                            message = r.getString(R.string.tethered_notification_no_device_message);
+                            message = getString(R.string.tethered_notification_no_device_message);
                         } else if (mCurrentClientCount == 1) {
-                            message = r.getString(R.string.tethered_notification_one_device_message,
+                            message = getString(R.string.tethered_notification_one_device_message,
                                     mCurrentClientCount);
                         } else if (mCurrentClientCount > 1) {
-                            message = r.getString(R.string.tethered_notification_multi_device_message,
+                            message = getString(R.string.tethered_notification_multi_device_message,
                                     mCurrentClientCount);
                         } else {
-                            message = r.getString(R.string.tethered_notification_no_device_message);
+                            message = getString(R.string.tethered_notification_no_device_message);
                         }
-                        mTetheredNotification.setLatestEventInfo(mContext,
-                                title, message, pi);
-                        mNotificationManager.notify(null, mTetheredNotification.icon,
-                                mTetheredNotification);
+
+                        mTetheredNotificationBuilder.setContentIntent(pi)
+                                .setContentTitle(title)
+                                .setContentText(message)
+                                .setOngoing(true);
+
+                        mNotificationManager.notify(mIcon,
+                                mTetheredNotificationBuilder.build());
                     }
                 }
             });

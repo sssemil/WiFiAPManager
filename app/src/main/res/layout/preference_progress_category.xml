@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2006 The Android Open Source Project
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2006 The Android Open Source Project
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
      You may obtain a copy of the License at
@@ -19,24 +18,22 @@
 
     <!-- This text view has the style of the list separator text view without the background and padding. -->
     <TextView
-        style="?android:attr/listSeparatorTextViewStyle"
-        android:background="@null"
         android:id="@+android:id/title"
-        android:paddingLeft="0dp"
+        style="?android:attr/listSeparatorTextViewStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:layout_gravity="start|center"
-        />
+        android:layout_weight="1"
+        android:background="@null"
+        android:paddingLeft="0dp" />
 
     <ProgressBar
         android:id="@+id/scanning_progress"
-        android:text="@string/progress_scanning"
+        style="?android:attr/progressBarStyleSmallTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="16dip"
-        style="?android:attr/progressBarStyleSmallTitle"
-        />
+        android:text="@string/progress_scanning" />
 
 </LinearLayout>
