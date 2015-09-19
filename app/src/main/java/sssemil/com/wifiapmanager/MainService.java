@@ -31,6 +31,7 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 
 import java.util.ArrayList;
@@ -90,8 +91,7 @@ public class MainService extends Service implements SharedPreferences.OnSharedPr
         mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        mSharedPreferences = getSharedPreferences("sssemil.com.wifiapmanager_preferences",
-                MODE_PRIVATE);
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
 

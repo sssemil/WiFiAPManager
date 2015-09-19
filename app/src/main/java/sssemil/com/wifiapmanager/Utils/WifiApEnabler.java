@@ -22,13 +22,15 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.wifi.WifiManager;
+import android.os.Build;
+import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
 import android.provider.Settings;
+import android.util.Log;
 
 import sssemil.com.wifiapmanager.R;
 
 public class WifiApEnabler {
-    private final String PREFS_FILE = "sssemil.com.wifiapmanager_preferences";
     private final Context mContext;
     private final SwitchPreference mSwitch;
     private final OnStateChangeListener mListener;
@@ -82,8 +84,14 @@ public class WifiApEnabler {
     }
 
     private void enableWifiSwitch() {
-        boolean isAirplaneMode = Settings.System.getInt(mContext.getContentResolver(),
-                Settings.System.AIRPLANE_MODE_ON, 0) != 0;
+        boolean isAirplaneMode;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            isAirplaneMode = Settings.Global.getInt(mContext.getContentResolver(),
+                    Settings.Global.AIRPLANE_MODE_ON, 0) != 0;
+        } else {
+            isAirplaneMode = Settings.System.getInt(mContext.getContentResolver(),
+                    Settings.System.AIRPLANE_MODE_ON, 0) != 0;
+        }
         if (!isAirplaneMode) {
             mSwitch.setEnabled(true);
         } else {
@@ -102,17 +110,19 @@ public class WifiApEnabler {
                 (wifiState == WifiManager.WIFI_STATE_ENABLED))) {
             mWifiManager.setWifiEnabled(false);
             //Settings.Global.putInt(cr, "wifi_saved_state", 1);
-            mContext.getSharedPreferences(PREFS_FILE,
-                    Context.MODE_PRIVATE).edit().putInt("wifi_saved_state", 1).apply();
+            PreferenceManager.getDefaultSharedPreferences(mContext).edit()
+                    .putInt("wifi_saved_state", 1).apply();
         }
 
         SharedPreferences sharedPreferences
-                = mContext.getSharedPreferences(PREFS_FILE, Context.MODE_PRIVATE);
+                = PreferenceManager.getDefaultSharedPreferences(mContext);
         if (enable && sharedPreferences.getBoolean("auto_enable_mobile_net", false)) {
-            sharedPreferences.edit().putBoolean("was_mobile_net_enabled", MobileDataUtils.isMobileDataEnabled(mContext)).apply();
-            MobileDataUtils.setMobileDataEnabled(mContext, true);
+            sharedPreferences.edit().putBoolean("was_mobile_net_enabled",
+                    Commons.MobileDataUtils.isMobileDataEnabled(mContext)).apply();
+            Commons.MobileDataUtils.setMobileDataEnabled(mContext, true);
         } else if (!enable && sharedPreferences.getBoolean("auto_enable_mobile_net", false)) {
-            MobileDataUtils.setMobileDataEnabled(mContext, sharedPreferences.getBoolean("was_mobile_net_enabled", false));
+            Commons.MobileDataUtils.setMobileDataEnabled(mContext,
+                    sharedPreferences.getBoolean("was_mobile_net_enabled", false));
         }
 
         /**
@@ -120,8 +130,8 @@ public class WifiApEnabler {
          * before we re-enable the Checkbox.
          */
         if (!enable) {
-            wifiSavedState = mContext.getSharedPreferences(PREFS_FILE,
-                    Context.MODE_PRIVATE).getInt("wifi_saved_state", 0);
+            wifiSavedState = PreferenceManager.getDefaultSharedPreferences(mContext)
+                    .getInt("wifi_saved_state", 0);
 
             if (wifiSavedState == 1) {
                 mWaitForWifiStateChange = true;
@@ -135,7 +145,7 @@ public class WifiApEnabler {
             }
         } else {
             if (mSwitch != null) {
-                mClientsCategory.setEmptyTextRes(R.string.wifi_error);
+                mClientsCategory.setEmptyTextRes(R.string.error);
             }
         }
 
@@ -145,26 +155,26 @@ public class WifiApEnabler {
         if (!enable) {
             if (wifiSavedState == 1) {
                 mWifiManager.setWifiEnabled(true);
-                mContext.getSharedPreferences(PREFS_FILE,
-                        Context.MODE_PRIVATE).edit().putInt("wifi_saved_state", 0).apply();
+                PreferenceManager.getDefaultSharedPreferences(mContext)
+                        .edit().putInt("wifi_saved_state", 0).apply();
             }
         }
     }
 
-    private void handleWifiApStateChanged(WIFI_AP_STATE state) {
-        if (state == WIFI_AP_STATE.WIFI_AP_STATE_ENABLING) {
+    private void handleWifiApStateChanged(Commons.WIFI_AP_STATE state) {
+        if (state == Commons.WIFI_AP_STATE.WIFI_AP_STATE_ENABLING) {
             mClientsCategory.setEmptyTextRes(R.string.wifi_tether_starting);
             mSwitch.setEnabled(false);
-        } else if (state == WIFI_AP_STATE.WIFI_AP_STATE_ENABLED) {
+        } else if (state == Commons.WIFI_AP_STATE.WIFI_AP_STATE_ENABLED) {
             updateState(true);
                 /* Doesn't need the airplane check */
             mClientsCategory.setEmptyTextRes(R.string.wifi_ap_client_none_connected);
             mSwitch.setEnabled(true);
-        } else if (state == WIFI_AP_STATE.WIFI_AP_STATE_DISABLING) {
+        } else if (state == Commons.WIFI_AP_STATE.WIFI_AP_STATE_DISABLING) {
             mClientsCategory.setEmptyTextRes(R.string.wifi_tether_stopping);
             mSwitch.setChecked(false);
             mSwitch.setEnabled(false);
-        } else if (state == WIFI_AP_STATE.WIFI_AP_STATE_DISABLED) {
+        } else if (state == Commons.WIFI_AP_STATE.WIFI_AP_STATE_DISABLED) {
             updateState(false);
             mClientsCategory.setEmptyTextRes(R.string.wifi_ap_client_ap_disabled);
             if (!mWaitForWifiStateChange) {

@@ -22,7 +22,11 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
 import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.view.MenuItem;
+
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 import sssemil.com.wifiapmanager.Utils.AppCompatPreferenceActivity;
 
@@ -76,5 +80,14 @@ public class Settings extends AppCompatPreferenceActivity {
             }
         }
         return true;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Tracker tracker = AnalyticsApplication.getDefaultTracker(this);
+        Log.i(this.getLocalClassName(), "Setting screen name: " + this.getLocalClassName());
+        tracker.setScreenName(this.getLocalClassName());
+        tracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 }

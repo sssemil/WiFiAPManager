@@ -23,8 +23,8 @@
         <SwitchPreference
             android:defaultValue="false"
             android:key="auto_enable_mobile_net"
-            android:summary="Turn on mobile network on access point start"
-            android:title="Enable mobile network" />
+            android:summary="@string/enable_mobile_net_sum"
+            android:title="@string/enable_mobile_net" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Other">

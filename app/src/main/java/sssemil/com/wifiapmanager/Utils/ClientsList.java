@@ -224,7 +224,7 @@ public class ClientsList {
             }
         }*/
 
-        ShellUtils.CommandResult result = ShellUtils.execCommand(
+        Commons.ShellUtils.CommandResult result = Commons.ShellUtils.execCommand(
                 "cat /data/misc/wifi/hostapd.deny", true);
         return result.list;
     }
@@ -236,7 +236,7 @@ public class ClientsList {
             String command = "echo \"" +
                     list.get(n) + "\" >> /data/misc/wifi/hostapd.deny\n";
             Log.e("command", command);
-            ShellUtils.execCommand(command, true);
+            Commons.ShellUtils.execCommand(command, true);
         }
     }
 
@@ -244,13 +244,13 @@ public class ClientsList {
             throws IOException, InterruptedException {
         String command = "echo \"" + mac + "\" >> /data/misc/wifi/hostapd.deny";
         Log.e("command", command);
-        ShellUtils.execCommand(command, true);
+        Commons.ShellUtils.execCommand(command, true);
     }
 
     public static void clearMACList() throws IOException, InterruptedException {
         String command = "echo \"\" > /data/misc/wifi/hostapd.deny";
         Log.e("command", command);
-        ShellUtils.execCommand(command, true);
+        Commons.ShellUtils.execCommand(command, true);
     }
 
     public static class ClientScanResult {

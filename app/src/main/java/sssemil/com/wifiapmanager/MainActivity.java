@@ -31,17 +31,21 @@ import android.os.Message;
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
 import android.preference.SwitchPreference;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.CompoundButton;
+
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 import sssemil.com.wifiapmanager.Utils.AppCompatPreferenceActivity;
 import sssemil.com.wifiapmanager.Utils.ClientsList;
-import sssemil.com.wifiapmanager.Utils.WIFI_AP_STATE;
+import sssemil.com.wifiapmanager.Utils.Commons;
 import sssemil.com.wifiapmanager.Utils.WifiApClientsProgressCategory;
 import sssemil.com.wifiapmanager.Utils.WifiApDialog;
 import sssemil.com.wifiapmanager.Utils.WifiApEnabler;
@@ -74,6 +78,7 @@ public class MainActivity extends AppCompatPreferenceActivity implements
     private WifiApManager mWifiApManager;
     private Activity mActivity;
     private SwitchPreference mEnableWifiAp;
+    private Tracker mTracker;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -81,6 +86,9 @@ public class MainActivity extends AppCompatPreferenceActivity implements
         addPreferencesFromResource(R.xml.wifi_ap_prefs);
 
         sendBroadcast(new Intent("sssemil.com.wifiapmanager.action.STARTED"));
+
+        // Obtain the shared Tracker instance.
+        mTracker = AnalyticsApplication.getDefaultTracker(this);
 
         mActivity = this;
 
@@ -155,6 +163,10 @@ public class MainActivity extends AppCompatPreferenceActivity implements
     public void onStart() {
         super.onStart();
 
+        Log.i(this.getLocalClassName(), "Setting screen name: " + this.getLocalClassName());
+        mTracker.setScreenName(this.getLocalClassName());
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+
         if (mWifiApEnabler != null) {
             mEnableWifiAp.setOnPreferenceChangeListener(this);
             mWifiApEnabler.resume();
@@ -225,9 +237,17 @@ public class MainActivity extends AppCompatPreferenceActivity implements
     public boolean onPreferenceTreeClick(PreferenceScreen screen, Preference preference) {
         if (preference == mCreateNetwork) {
             showDialog(DIALOG_AP_SETTINGS);
+            mTracker.send(new HitBuilders.EventBuilder()
+                    .setCategory("Action")
+                    .setAction("AP Settings Dialog")
+                    .build());
         } else {
             final String mac = String.valueOf(preference.getTitle());
             if (mac.matches("..:..:..:..:..:..")) {
+                mTracker.send(new HitBuilders.EventBuilder()
+                        .setCategory("Action")
+                        .setAction("Device clicked")
+                        .build());
                 final AlertDialog.Builder adb = new AlertDialog.Builder(MainActivity.this);
                 adb.setTitle(getString(R.string.warning));
                 adb.setMessage(getString(R.string.block_dev));
@@ -245,6 +265,10 @@ public class MainActivity extends AppCompatPreferenceActivity implements
                                 } catch (IOException | InterruptedException e) {
                                     e.printStackTrace();
                                 }
+                                mTracker.send(new HitBuilders.EventBuilder()
+                                        .setCategory("Action")
+                                        .setAction("Device blocked")
+                                        .build());
                             }
                         }
                 );
@@ -258,10 +282,14 @@ public class MainActivity extends AppCompatPreferenceActivity implements
     @Override
     public void onClick(DialogInterface dialogInterface, int button) {
         if (button == DialogInterface.BUTTON_POSITIVE) {
+            mTracker.send(new HitBuilders.EventBuilder()
+                    .setCategory("Action")
+                    .setAction("Dialog BUTTON_POSITIVE")
+                    .build());
             mWifiConfig = mDialog.getConfig();
             if (mWifiConfig != null) {
                 mWifiApManager.setWifiApConfiguration(mWifiConfig);
-                if (mWifiApManager.getWifiApState() == WIFI_AP_STATE.WIFI_AP_STATE_ENABLED) {
+                if (mWifiApManager.getWifiApState() == Commons.WIFI_AP_STATE.WIFI_AP_STATE_ENABLED) {
                     mIsRestarting = true;
                     mWifiApEnabler.setSoftapEnabled(false);
                     mWifiApEnabler.setSoftapEnabled(true);
@@ -292,6 +320,10 @@ public class MainActivity extends AppCompatPreferenceActivity implements
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        mTracker.send(new HitBuilders.EventBuilder()
+                .setCategory("Action")
+                .setAction("onCheckedChanged " + isChecked)
+                .build());
         if (isChecked) {
             startProvisioningIfNecessary();
         } else {

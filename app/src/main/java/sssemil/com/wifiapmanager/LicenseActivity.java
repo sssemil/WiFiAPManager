@@ -2,8 +2,12 @@ package sssemil.com.wifiapmanager;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.webkit.WebView;
+
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 public class LicenseActivity extends AppCompatActivity {
 
@@ -25,5 +29,14 @@ public class LicenseActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Tracker tracker = AnalyticsApplication.getDefaultTracker(this);
+        Log.i(this.getLocalClassName(), "Setting screen name: " + this.getLocalClassName());
+        tracker.setScreenName(this.getLocalClassName());
+        tracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 }

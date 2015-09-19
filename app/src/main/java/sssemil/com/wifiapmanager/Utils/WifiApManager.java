@@ -60,10 +60,10 @@ public class WifiApManager {
     /**
      * Gets the WiFi enabled state.
      *
-     * @return {@link WIFI_AP_STATE}
+     * @return {@link Commons.WIFI_AP_STATE}
      * @see #isWifiApEnabled()
      */
-    public WIFI_AP_STATE getWifiApState() {
+    public Commons.WIFI_AP_STATE getWifiApState() {
         try {
             Method method = mWifiManager.getClass().getMethod("getWifiApState");
 
@@ -74,10 +74,10 @@ public class WifiApManager {
                 tmp = tmp - 10;
             }
 
-            return WIFI_AP_STATE.class.getEnumConstants()[tmp];
+            return Commons.WIFI_AP_STATE.class.getEnumConstants()[tmp];
         } catch (Exception e) {
             Log.e(this.getClass().toString(), "", e);
-            return WIFI_AP_STATE.WIFI_AP_STATE_FAILED;
+            return Commons.WIFI_AP_STATE.WIFI_AP_STATE_FAILED;
         }
     }
 
@@ -87,7 +87,7 @@ public class WifiApManager {
      * @return {@code true} if WiFi AP is enabled
      */
     public boolean isWifiApEnabled() {
-        return getWifiApState() == WIFI_AP_STATE.WIFI_AP_STATE_ENABLED;
+        return getWifiApState() == Commons.WIFI_AP_STATE.WIFI_AP_STATE_ENABLED;
     }
 
     /**

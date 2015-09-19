@@ -22,6 +22,7 @@ import android.content.DialogInterface;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiConfiguration.AuthAlgorithm;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -44,7 +45,6 @@ public class WifiApDialog extends AlertDialog implements View.OnClickListener,
     public static final int OPEN_INDEX = 0;
     public static final int WPA2_INDEX = 1;
     static final int BUTTON_SUBMIT = DialogInterface.BUTTON_POSITIVE;
-    private final String PREFS_FILE = "sssemil.com.wifiapmanager_preferences";
     private final String KEY_SHOW_PASSWORD = "show_password";
     private final DialogInterface.OnClickListener mListener;
     WifiConfiguration mWifiConfig;
@@ -52,10 +52,12 @@ public class WifiApDialog extends AlertDialog implements View.OnClickListener,
     private TextView mSsid;
     private int mSecurityTypeIndex = OPEN_INDEX;
     private EditText mPassword;
+    private Context mContext;
 
     public WifiApDialog(Context context, DialogInterface.OnClickListener listener,
                         WifiConfiguration wifiConfig) {
         super(context);
+        mContext = context;
         mListener = listener;
         mWifiConfig = wifiConfig;
         if (wifiConfig != null) {
@@ -64,7 +66,7 @@ public class WifiApDialog extends AlertDialog implements View.OnClickListener,
     }
 
     public static int getSecurityTypeIndex(WifiConfiguration wifiConfig) {
-        if (wifiConfig.allowedKeyManagement.get(KeyMgmt.WPA2_PSK)) {
+        if (wifiConfig.allowedKeyManagement.get(Commons.KeyMgmt.WPA2_PSK)) {
             return WPA2_INDEX;
         }
         return OPEN_INDEX;
@@ -84,10 +86,10 @@ public class WifiApDialog extends AlertDialog implements View.OnClickListener,
 
         switch (mSecurityTypeIndex) {
             case OPEN_INDEX:
-                config.allowedKeyManagement.set(KeyMgmt.NONE);
+                config.allowedKeyManagement.set(Commons.KeyMgmt.NONE);
                 return config;
             case WPA2_INDEX:
-                config.allowedKeyManagement.set(KeyMgmt.WPA2_PSK);
+                config.allowedKeyManagement.set(Commons.KeyMgmt.WPA2_PSK);
                 config.allowedAuthAlgorithms.set(AuthAlgorithm.OPEN);
                 if (mPassword.length() != 0) {
                     config.preSharedKey = mPassword.getText().toString();
@@ -127,7 +129,8 @@ public class WifiApDialog extends AlertDialog implements View.OnClickListener,
 
         mSsid.addTextChangedListener(this);
         final CheckBox showPassword = (CheckBox) mView.findViewById(R.id.show_password);
-        final boolean showPasswordChecked = getContext().getSharedPreferences(PREFS_FILE, 0)
+        final boolean showPasswordChecked = PreferenceManager
+                .getDefaultSharedPreferences(getContext())
                 .getBoolean(KEY_SHOW_PASSWORD, false);
         showPassword.setChecked(showPasswordChecked);
         onClick(showPassword);
@@ -156,7 +159,7 @@ public class WifiApDialog extends AlertDialog implements View.OnClickListener,
                 InputType.TYPE_CLASS_TEXT | (checked ?
                         InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD :
                         InputType.TYPE_TEXT_VARIATION_PASSWORD));
-        getContext().getSharedPreferences(PREFS_FILE, 0)
+        PreferenceManager.getDefaultSharedPreferences(mContext)
                 .edit()
                 .putBoolean(KEY_SHOW_PASSWORD, checked)
                 .apply();

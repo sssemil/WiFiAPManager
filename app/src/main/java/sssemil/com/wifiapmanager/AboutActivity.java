@@ -20,8 +20,12 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.util.Linkify;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
+
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 import java.util.regex.Pattern;
 
@@ -59,5 +63,14 @@ public class AboutActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Tracker tracker = AnalyticsApplication.getDefaultTracker(this);
+        Log.i(this.getLocalClassName(), "Setting screen name: " + this.getLocalClassName());
+        tracker.setScreenName(this.getLocalClassName());
+        tracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 }

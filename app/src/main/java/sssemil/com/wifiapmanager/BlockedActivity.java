@@ -19,6 +19,7 @@ package sssemil.com.wifiapmanager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +29,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -111,6 +115,15 @@ public class BlockedActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Tracker tracker = AnalyticsApplication.getDefaultTracker(this);
+        Log.i(this.getLocalClassName(), "Setting screen name: " + this.getLocalClassName());
+        tracker.setScreenName(this.getLocalClassName());
+        tracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     private class Adapter extends ArrayAdapter<String> {

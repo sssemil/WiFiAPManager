@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="http://schemas.android.com/apk/res-auto">
+    <string name="app_name">WiFi AP Manager</string>
+    <string name="wifi_tether_configure_ap_text">Настройка точки доступа Wi-Fi</string>
+    <string name="wifi_tether_configure_subtext">Сеть: <xliff:g id="NETWORK_SSID">%1$s</xliff:g>; шифрование: <xliff:g id="NETWORK_SECURITY">%2$s</xliff:g></string>
+    <string name="wifi_tether_starting">Включение точки доступа…</string>
+    <string name="wifi_tether_stopping">Выключение точки доступа…</string>
+    <string name="wifi_tether_checkbox_text">Точка доступа Wi-Fi</string>
+    <string name="wifi_ssid_hint">Введите имя сети (SSID)</string>
+    <string name="wifi_ssid">Имя сети</string>
+    <string name="wifi_show_password">Показать пароль</string>
+    <string name="wifi_security_none">Нет</string>
+    <string name="wifi_security">Защита</string>
+    <string name="wifi_save">Сохранить</string>
+    <string name="wifi_password">Пароль</string>
+    <string name="wifi_cancel">Отмена</string>
+    <string name="error">Ошибка</string>
+    <string name="settings">Настройки</string>
+    <string name="bad_perm">Похоже, что права доступа к файлам должны быть исправлены. Исправить?</string>
+    <string name="block_dev">Блокировать этот MAC-адрес?</string>
+    <string name="blocked_devices">Заблокированные устройства</string>
+    <string name="build_version">Номер сборки</string>
+    <string name="clear">Очистить</string>
+    <string name="credentials_password_too_short">В пароле должно быть не менее 8 символов.</string>
+    <string name="license1">Copyright © 2015 Emil Suleymanov</string>
+    <string name="license2">Распространяется под Apache License v2.0</string>
+    <string name="license3">Исходный код доступен на https://github.com/sssemil/WiFiAPManager</string>
+    <string name="no_blocked_devs">Нет заблокированных устройства</string>
+    <string name="no_root">Похоже, что у вас нет прав суперпользователя.</string>
+    <string name="open_source_license">Лицензии открытого ПО</string>
+    <string name="progress_scanning">Поиск</string>
+    <string name="save">Сохранить</string>
+    <string name="about">О программе</string>
+    <string name="show_notification">Оповещать</string>
+    <string name="show_notification_summary">Показать количество подключенных устройств</string>
+    <string name="small_info">Точка доступа WiFi</string>
+    <string name="tethered_notification_multi_device_message">Подключено устройств: <xliff:g id="count">%1$s</xliff:g></string>
+    <string name="tethered_notification_no_device_message">Нет подключенных устройств</string>
+    <string name="tethered_notification_one_device_message"><xliff:g id="count">%1$s</xliff:g> подключенное устройство</string>
+    <string name="tethered_notification_title">Точка доступа активна</string>
+    <string name="ver">Версия</string>
+    <string name="wifi_ap_client_ap_disabled">Точка доступа отключена</string>
+    <string name="wifi_ap_client_none_connected">Нет подключенных устройств</string>
+    <string name="wifi_ap_clients_title">Подключенные устройства</string>
+    <string name="warning">Внимание</string>
+    <string name="touch_to_remove">Нажмите для удаления</string>
+    <string name="enable_mobile_net">Включать мобильную сеть</string>
+    <string name="enable_mobile_net_sum">Включать мобильную сеть при запуске точки доступа</string>
+</resources>
