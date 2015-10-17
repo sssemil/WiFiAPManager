@@ -41,11 +41,9 @@ public class ClientsList {
     /**
      * Gets a list of the clients connected to the Hotspot, reachable deadline(-w) is 3(sec)
      *
-     * @param onlyReachables {@code false} if the list should contain unreachable
-     *                       (probably disconnected) clients, {@code true} otherwise
      * @return ArrayList of {@link ClientScanResult}
      */
-    public static ArrayList<ClientScanResult> get(boolean onlyReachables, Context context) {
+    public static ArrayList<ClientScanResult> get(Context context) {
         BufferedReader br = null;
         ArrayList<ClientScanResult> result = new ArrayList<>();
 
@@ -61,23 +59,19 @@ public class ClientsList {
                     String mac = splitted[3];
 
                     if (mac.matches("..:..:..:..:..:..")) {
-                        boolean isReachable = false;
-                        if (onlyReachables) {
-                            isReachable = isReachableByPing(splitted[0]);
+                        boolean isReachable = isReachableByPing(splitted[0]);
+                        ClientScanResult client = new ClientScanResult();
+                        client.ipAddr = splitted[0];
+                        if (mac.equals("00:00:00:00:00:00")) {
+                            client.hwAddr = "---:---:---:---:---:---";
+                        } else {
+                            client.hwAddr = mac.toUpperCase();
                         }
-                        if (!onlyReachables || isReachable) {
-                            ClientScanResult client = new ClientScanResult();
-                            client.ipAddr = splitted[0];
-                            if (mac.equals("00:00:00:00:00:00")) {
-                                client.hwAddr = "---:---:---:---:---:---";
-                            } else {
-                                client.hwAddr = mac.toUpperCase();
-                            }
-                            client.device = splitted[5];
-                            client.isReachable = isReachable;
-                            client.vendor = getVendor(mac, context);
-                            result.add(client);
-                        }
+                        client.device = splitted[5];
+                        client.isReachable = isReachable;
+                        client.vendor = getVendor(mac, context);
+                        result.add(client);
+
                     }
                 }
             }
@@ -145,9 +139,7 @@ public class ClientsList {
             Process mIpAddrProcess = runtime.exec("/system/bin/ping -c 1 -w 3 " + client);
             int mExitValue = mIpAddrProcess.waitFor();
             return (mExitValue == 0);
-        } catch (InterruptedException e) {
-            // Ignore
-        } catch (IOException e) {
+        } catch (InterruptedException | IOException e) {
             // Ignore
         }
         return false;

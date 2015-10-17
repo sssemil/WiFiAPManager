@@ -69,7 +69,6 @@ public class MainService extends Service implements SharedPreferences.OnSharedPr
 
     @Override
     public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
@@ -84,7 +83,7 @@ public class MainService extends Service implements SharedPreferences.OnSharedPr
         intentFilter.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED);
         intentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
 
-        mIcon = R.mipmap.ic_launcher;
+        mIcon = R.drawable.ic_tt;
 
         mContext.registerReceiver(mReceiver, intentFilter);
 
@@ -183,13 +182,17 @@ public class MainService extends Service implements SharedPreferences.OnSharedPr
 
     private class DoScan extends AsyncTask<String, Void, String> {
 
-        private int mCurrentClientCount;
+        private int mCurrentClientCount = 0;
 
         @Override
         protected String doInBackground(String... params) {
             ArrayList<ClientsList.ClientScanResult> currentClientList
-                    = ClientsList.get(true, mContext);
-            mCurrentClientCount = currentClientList.size();
+                    = ClientsList.get(mContext);
+            for (int n = 0; n < currentClientList.size(); n++) {
+                if (currentClientList.get(n).isReachable) {
+                    mCurrentClientCount++;
+                }
+            }
             return null;
         }
 

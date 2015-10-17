@@ -15,11 +15,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:wifiapsettings="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_blocked"
-        android:title="@string/blocked_devices"
-        wifiapsettings:showAsAction="never" />
-
-    <item
         android:id="@+id/action_settings"
         android:icon="@drawable/ic_prefs"
         android:title="@string/settings"

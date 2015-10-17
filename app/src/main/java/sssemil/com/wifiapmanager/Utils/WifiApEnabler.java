@@ -26,7 +26,6 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
 import android.provider.Settings;
-import android.util.Log;
 
 import sssemil.com.wifiapmanager.R;
 

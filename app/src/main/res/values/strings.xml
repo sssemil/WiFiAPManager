@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2015 Emil Suleymanov <suleymanovemil8@gmail.com>
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2015 Emil Suleymanov <suleymanovemil8@gmail.com>
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
      You may obtain a copy of the License at
@@ -21,9 +20,9 @@
     <string name="wifi_tether_configure_ap_text">Set up Wi\u2011Fi hotspot</string>
 
     <!-- Wifi AP: connected devices -->
-    <string name="wifi_ap_clients_title">Connected devices</string>
+    <string name="wifi_ap_clients_title">Devices</string>
     <string name="wifi_ap_client_ap_disabled">Hotspot is disabled</string>
-    <string name="wifi_ap_client_none_connected">No devices connected</string>
+    <string name="wifi_ap_client_none_connected">No devices</string>
 
     <string name="wifi_cancel">Cancel</string>
     <string name="wifi_save">Save</string>
@@ -85,7 +84,6 @@
     <string name="tethered_notification_no_device_message">No connected device</string>
     <string name="tethered_notification_one_device_message"><xliff:g id="count">%1$s</xliff:g> connected device</string>
     <string name="tethered_notification_multi_device_message"><xliff:g id="count">%1$s</xliff:g> connected devices</string>
-    <string name="blocked_devices">Blocked devices</string>
 
     <string name="save">Save</string>
     <string name="clear">Clear</string>
@@ -93,11 +91,15 @@
     <string name="no_root">Looks like you don\'t have root permissions.</string>
     <string name="bad_perm">Looks like file permissions need to be fixed. Fix them?</string>
     <string name="block_dev">Block this MAC address?</string>
+    <string name="unblock_dev">Unblock this MAC address?</string>
     <string name="no_blocked_devs">No blocked devices</string>
     <string name="touch_to_remove">Touch to remove</string>
     <string name="show_notification_summary">Display number of connected devices</string>
     <string name="open_source_license">Open source license</string>
     <string name="enable_mobile_net">Enable mobile network</string>
     <string name="enable_mobile_net_sum">Turn on mobile network on access point start</string>
+
+    <string name="disconnected">DISCONNECTED</string>
+    <string name="blocked">BLOCKED</string>
 
 </resources>

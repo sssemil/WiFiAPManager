@@ -65,10 +65,6 @@
             android:exported="true" />
 
         <activity
-            android:name=".BlockedActivity"
-            android:label="@string/blocked_devices" />
-
-        <activity
             android:name=".LicenseActivity"
             android:label="@string/open_source_license" />
 

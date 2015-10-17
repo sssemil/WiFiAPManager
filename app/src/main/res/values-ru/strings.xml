@@ -40,10 +40,13 @@
     <string name="tethered_notification_title">Точка доступа активна</string>
     <string name="ver">Версия</string>
     <string name="wifi_ap_client_ap_disabled">Точка доступа отключена</string>
-    <string name="wifi_ap_client_none_connected">Нет подключенных устройств</string>
-    <string name="wifi_ap_clients_title">Подключенные устройства</string>
+    <string name="wifi_ap_client_none_connected">Нет устройств</string>
+    <string name="wifi_ap_clients_title">Устройства</string>
     <string name="warning">Внимание</string>
     <string name="touch_to_remove">Нажмите для удаления</string>
     <string name="enable_mobile_net">Включать мобильную сеть</string>
     <string name="enable_mobile_net_sum">Включать мобильную сеть при запуске точки доступа</string>
+    <string name="blocked">ЗАБЛОКИРОВАНО</string>
+    <string name="disconnected">ОТСОЕДИНЕНО</string>
+    <string name="unblock_dev">Разблокировать этот MAC-адрес?</string>
 </resources>

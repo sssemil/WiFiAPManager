@@ -40,6 +40,8 @@ import android.widget.CompoundButton;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
+import org.xmlpull.v1.XmlPullParserException;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -137,10 +139,39 @@ public class MainActivity extends AppCompatPreferenceActivity implements
             mClientsCategory.setEmptyTextRes(R.string.wifi_ap_client_none_connected);
             if ((mLastClientList != null) && (mActivity != null)) {
                 for (ClientsList.ClientScanResult client : mLastClientList) {
-                    Preference preference = new Preference(mActivity);
-                    preference.setTitle(client.hwAddr);
-                    preference.setSummary(client.ipAddr + "   " + client.vendor);
-                    mClientsCategory.addPreference(preference);
+                    if (client.isReachable) {
+                        Preference preference = new Preference(mActivity);
+                        preference.setTitle(client.hwAddr);
+                        preference.setSummary(client.ipAddr + "   " + client.vendor);
+                        //preference.setEnabled(client.isReachable);
+                        mClientsCategory.addPreference(preference);
+                    }
+                }
+
+                for (ClientsList.ClientScanResult client : mLastClientList) {
+                    if (!client.isReachable) {
+                        Preference preference = new Preference(mActivity);
+                        preference.setTitle(client.hwAddr + "   "
+                                + getString(R.string.disconnected));
+                        preference.setSummary(client.ipAddr + "   " + client.vendor);
+                        //preference.setEnabled(client.isReachable);
+                        mClientsCategory.addPreference(preference);
+                    }
+                }
+
+                try {
+                    ArrayList<String> blockedList = ClientsList.getDeniedMACList();
+
+                    for (String client : blockedList) {
+                        Preference preference = new Preference(mActivity);
+                        preference.setTitle(client + "   "
+                                + getString(R.string.blocked));
+                        preference.setSummary("___.___.___.___   "
+                                + ClientsList.getVendor(client, MainActivity.this));
+                        mClientsCategory.addPreference(preference);
+                    }
+                } catch (IOException | XmlPullParserException e) {
+                    e.printStackTrace();
                 }
             }
         } else {
@@ -235,6 +266,9 @@ public class MainActivity extends AppCompatPreferenceActivity implements
 
     @Override
     public boolean onPreferenceTreeClick(PreferenceScreen screen, Preference preference) {
+        final String[] splited = String.valueOf(preference.getTitle()).split(" ");
+        final String mac = splited[0];
+        Log.i("MAC", "\"" + mac + "\"");
         if (preference == mCreateNetwork) {
             showDialog(DIALOG_AP_SETTINGS);
             mTracker.send(new HitBuilders.EventBuilder()
@@ -242,7 +276,6 @@ public class MainActivity extends AppCompatPreferenceActivity implements
                     .setAction("AP Settings Dialog")
                     .build());
         } else {
-            final String mac = String.valueOf(preference.getTitle());
             if (mac.matches("..:..:..:..:..:..")) {
                 mTracker.send(new HitBuilders.EventBuilder()
                         .setCategory("Action")
@@ -250,12 +283,29 @@ public class MainActivity extends AppCompatPreferenceActivity implements
                         .build());
                 final AlertDialog.Builder adb = new AlertDialog.Builder(MainActivity.this);
                 adb.setTitle(getString(R.string.warning));
-                adb.setMessage(getString(R.string.block_dev));
+                Log.i("L", splited[0]);
+                Log.i("L", splited[splited.length - 1]);
+                if (splited.length > 1 && splited[splited.length - 1].equalsIgnoreCase(getString(R.string.blocked))) {
+                    adb.setMessage(getString(R.string.unblock_dev));
+                } else {
+                    adb.setMessage(getString(R.string.block_dev));
+                }
                 adb.setPositiveButton(getString(android.R.string.ok),
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 try {
-                                    ClientsList.addDeniedMACAddr(mac);
+                                    if (splited.length > 1 && splited[splited.length - 1].equals(getString(R.string.blocked))) {
+                                        ArrayList<String> blockedList = ClientsList.getDeniedMACList();
+                                        ArrayList<String> blockedListNew = new ArrayList<>();
+                                        for (String dev : blockedList) {
+                                            if (!dev.equals(splited[0])) {
+                                                blockedListNew.add(dev);
+                                            }
+                                        }
+                                        ClientsList.setDeniedMACList(blockedListNew);
+                                    } else {
+                                        ClientsList.addDeniedMACAddr(mac);
+                                    }
                                     new Thread(new Runnable() {
                                         @Override
                                         public void run() {
@@ -351,8 +401,6 @@ public class MainActivity extends AppCompatPreferenceActivity implements
             case R.id.action_settings:
                 startActivity(new Intent(this, Settings.class));
                 return true;
-            case R.id.action_blocked:
-                startActivity(new Intent(this, BlockedActivity.class));
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -381,7 +429,7 @@ public class MainActivity extends AppCompatPreferenceActivity implements
         @Override
         public void handleMessage(Message msg) {
             ArrayList<ClientsList.ClientScanResult> clients
-                    = ClientsList.get(true, mActivity);
+                    = ClientsList.get(mActivity);
             mHandler.obtainMessage(0, clients).sendToTarget();
         }
     }
